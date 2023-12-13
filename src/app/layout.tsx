@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 import TopNavigation from '@/components/TopNavigation';
 import FooterMenu from '@/components/FooterMenu';
+import ContextProvider from '@/components/ContextProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,9 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <TopNavigation />
-          <main className="pt-0">{children}</main>
-          <FooterMenu />
+          <ContextProvider>
+            <TopNavigation />
+            <main className="pt-0">{children}</main>
+            <FooterMenu />
+          </ContextProvider>
         </ThemeProvider>
       </body>
     </html>

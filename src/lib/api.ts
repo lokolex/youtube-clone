@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { Video } from '../../types/custom_types';
+import { ChannelDetailsType, Video } from '../../types/custom_types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const VIDEO_BASE_URL = process.env.NEXT_PUBLIC_VIDEO_BASE_URL;
 
 export async function fetchVideos(query: string, maxResult: number) {
   try {
@@ -54,4 +55,45 @@ export async function fetchVideos(query: string, maxResult: number) {
     console.log('ERROR FETCHING VIDEOS', error.response.data);
     throw error;
   }
+}
+
+export async function fetchVideoDetails(videoId: string) {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL}/videos?key=${API_KEY}&id=${videoId}&part=snippet,statistics`
+    );
+
+    const videoData = data.items[0].snippet;
+
+    const channelData = await fetchChannelDetails(videoData.channelId);
+
+    const videoDetails = {
+      title: videoData.title,
+      videoUrl: `${VIDEO_BASE_URL}${videoId}`,
+      likes: data.items[0].statistics.likeCount,
+      description: videoData.description,
+      publishedDate: videoData.publishedAt,
+      channelImage: channelData.channelImage,
+      channelName: channelData.channelName,
+      subscribersCount: channelData.subscribersCount,
+    };
+
+    return videoDetails;
+  } catch (error: any) {
+    console.log('ERROR FETCHING VIDEO DETAILS', error.response.data);
+    throw error;
+  }
+}
+
+export async function fetchChannelDetails(channelId: string): Promise<ChannelDetailsType> {
+  const { data } = await axios.get(
+    `${BASE_URL}/channels?key=${API_KEY}&id=${channelId}&part=snippet,statistics`
+  );
+  const channelDetails: ChannelDetailsType = {
+    channelName: data.items[0].snippet.title,
+    subscribersCount: data.items[0].statistics.subscriberCount,
+    channelImage: data.items[0].snippet.thumbnails.medium.url,
+  };
+
+  return channelDetails;
 }

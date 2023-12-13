@@ -11,3 +11,9 @@ export type Video = {
   };
   publishedDate: string;
 };
+
+export type ChannelDetailsType = {
+  channelName: string;
+  subscribersCount: string;
+  channelImage: string;
+};

@@ -2,7 +2,7 @@
 
 import { Bell, Menu, Search, Video, Youtube } from 'lucide-react';
 import Link from 'next/link';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useContext, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
@@ -13,9 +13,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import AppContext from '@/context/appContext';
 
 const TopNavigation = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { setShowNav } = useContext(AppContext);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,7 +35,7 @@ const TopNavigation = () => {
       <div className="flex justify-between items-center px-2 md:px-7 h-16">
         <div className="flex items-center">
           <span className="hover:bg-background-dark/30 md:block hidden hover:text-white cursor-pointer rounded-full p-2 mr-1">
-            <Menu size={30} />
+            <Menu onClick={() => setShowNav((prevState) => !prevState)} size={30} />
           </span>
           <Link href="/" className="flex items-center space-x-2">
             <Youtube size={48} className="text-red-700" />
@@ -105,7 +108,10 @@ const TopNavigation = () => {
                         <p>AlexStr</p>
                         <p>@AlexStr</p>
                       </span>
-                      <Link href={`/channels`} className="text-blue-500">
+                      <Link
+                        href={`/channels/${process.env.NEXT_PUBLIC_CHANNEL_ID}`}
+                        className="text-blue-500"
+                      >
                         View your channel
                       </Link>
                     </div>
