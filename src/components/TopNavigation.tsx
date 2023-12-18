@@ -56,9 +56,9 @@ const TopNavigation = () => {
               ref={searchInputRef}
               className="px-4 h-full md:w-48 lg:w-96 border dark:border-gray-50 border-gray-300 rounded-l-full focus:outline-none"
             />
-            <div className="h-full px-5 grid place-content-center bg-background-light text-black rounded-r-full cursor-pointer">
+            <button className="h-full px-5 grid place-content-center bg-background-light text-black rounded-r-full cursor-pointer">
               <Search />
-            </div>
+            </button>
           </form>
         </div>
 
@@ -85,9 +85,9 @@ const TopNavigation = () => {
                     ref={searchInputRef}
                     className="px-4 h-full md:w-48 lg:w-96 border dark:border-gray-50 border-gray-300 rounded-l-full focus:outline-none"
                   />
-                  <div className="h-full px-5 grid place-content-center bg-background-light text-black rounded-r-full cursor-pointer">
+                  <button className="h-full px-5 grid place-content-center bg-background-light text-black rounded-r-full cursor-pointer">
                     <Search />
-                  </div>
+                  </button>
                 </form>
               </DialogContent>
             </Dialog>
