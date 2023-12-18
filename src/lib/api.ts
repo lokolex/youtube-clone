@@ -4,6 +4,7 @@ import type {
   IChannelContentDetailsRes,
   IChannelRes,
   IChannelVideosRes,
+  ISearchQueryRes,
   Video,
 } from '../../types/custom_types';
 
@@ -142,5 +143,17 @@ export async function fetchChannelPlaylistId(channelId: string) {
     return channelPlaylistId;
   } catch (error: any) {
     console.log('Error searching for the channel', error.response.data);
+  }
+}
+
+export async function fetchSearchQuery(searchQuery: string) {
+  try {
+    const { data } = await axios.get<ISearchQueryRes>(
+      `${BASE_URL}/search?key=${API_KEY}&q=${searchQuery}&part=snippet&type=video&maxResults=10`
+    );
+
+    return data;
+  } catch (error) {
+    console.log('Error with the search query', error);
   }
 }

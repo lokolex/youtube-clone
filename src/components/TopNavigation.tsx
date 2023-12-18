@@ -2,6 +2,7 @@
 
 import { Bell, Menu, Search, Video, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useContext, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
@@ -18,6 +19,8 @@ import AppContext from '@/context/appContext';
 const TopNavigation = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const router = useRouter();
+
   const { setShowNav } = useContext(AppContext);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -26,7 +29,9 @@ const TopNavigation = () => {
     event.preventDefault();
 
     if (searchInputRef.current) {
-      console.log(searchInputRef.current.value);
+      const searchQuery = searchInputRef.current.value;
+      setDialogOpen(false);
+      router.push(`/search?q=${searchQuery}`);
     }
   };
 
