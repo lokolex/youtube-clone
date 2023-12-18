@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { ChannelDetailsType, Video } from '../../types/custom_types';
+import type {
+  ChannelDetailsType,
+  IChannelContentDetailsRes,
+  IChannelRes,
+  IChannelVideosRes,
+  Video,
+} from '../../types/custom_types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
@@ -96,4 +102,45 @@ export async function fetchChannelDetails(channelId: string): Promise<ChannelDet
   };
 
   return channelDetails;
+}
+
+export async function fetchChannel(channelId: string) {
+  try {
+    const { data } = await axios.get<IChannelRes>(
+      `${BASE_URL}/channels?key=${API_KEY}&id=${channelId}&part=snippet`
+    );
+
+    const channelData = data.items[0];
+    return channelData;
+  } catch (error: any) {
+    console.log('Error searching for the channel', error.response.data);
+  }
+}
+
+export async function fetchChannelVideos(channelId: string) {
+  try {
+    const channelPlaylistId = await fetchChannelPlaylistId(channelId);
+
+    const { data } = await axios.get<IChannelVideosRes>(
+      `${BASE_URL}/playlistItems?key=${API_KEY}&playlistId=${channelPlaylistId}&maxResults=8&part=snippet`
+    );
+
+    const channelVideos = data.items;
+    return channelVideos;
+  } catch (error: any) {
+    console.log('Error searching for the channel', error.response.data);
+  }
+}
+
+export async function fetchChannelPlaylistId(channelId: string) {
+  try {
+    const { data } = await axios.get<IChannelContentDetailsRes>(
+      `${BASE_URL}/channels?key=${API_KEY}&id=${channelId}&part=contentDetails`
+    );
+
+    const channelPlaylistId = data.items[0].contentDetails.relatedPlaylists.uploads;
+    return channelPlaylistId;
+  } catch (error: any) {
+    console.log('Error searching for the channel', error.response.data);
+  }
 }
